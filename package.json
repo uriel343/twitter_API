@@ -1,0 +1,33 @@
+{
+  "name": "twitter_api",
+  "version": "1.0.0",
+  "description": "backend with nodejs simulating twitter functions",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uriel343/twitter_API.git"
+  },
+  "author": "@mr_ucode",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/uriel343/twitter_API/issues"
+  },
+  "homepage": "https://github.com/uriel343/twitter_API#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  },
+  "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "jwt-simple": "^0.5.6",
+    "moment": "^2.26.0",
+    "mongoose": "^5.9.18"
+  }
+}
