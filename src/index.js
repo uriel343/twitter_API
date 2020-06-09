@@ -1,6 +1,8 @@
 'use strict'
 const mongoose = require('mongoose')
 const {app, PORT} = require('./app')
+const dotenv = require('dotenv')
+dotenv.config()
 const config = require('./confing')
 const DATE_NOW = new Date()
 
