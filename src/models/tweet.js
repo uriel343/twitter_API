@@ -1,14 +1,17 @@
-'use strict'
-const mongoose = require('mongoose')
-const Schema = mongoose.Schema
+"use strict";
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
 var tweetSchema = Schema({
-    createdAt: String,
-    contentOfTweet: String,
-    user: {
+  tweets: [
+    {
+      contentOfTweet: String,
+      user: {
         type: Schema.Types.ObjectId,
-        ref: 'user'
-    }
-})
+        ref: "user",
+      },
+    },
+  ],
+});
 
-module.exports = mongoose.model('tweet', tweetSchema)
+module.exports = mongoose.model("tweet", tweetSchema);

@@ -13,7 +13,7 @@ function startExpress(){
 }
 
 async function initializeMongo(){
-    try {
+    try {                                       
         const client = await mongoose.connect(config.MONGO_DB_URL, {useNewUrlParser: true, useUnifiedTopology: true})
         console.log(`[${DATE_NOW}] ==> Mongo was initialized`)
         startExpress()
