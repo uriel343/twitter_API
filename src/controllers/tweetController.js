@@ -1,5 +1,6 @@
 "use strict";
 const Tweet = require("../models/tweet");
+const User = require('../models/user')
 
 function createTweet(req,res) {
   var parametr = req.body.command;
@@ -51,21 +52,31 @@ function viewTweets(req,res){
   var myIdAccount = req.user.sub
 
   if(userAccount){
-    Tweet.find({user: userAccount},{_id: 0},(err, userTweets)=>{
+    User.findOne({user: userAccount}, (err, userFound)=>{
       if(err) return res.status(500).send({
         message: "Server error, please try again",
       });
-      if(!userTweets) return res.status(404).send({
-        message: 'Tweets not found'
+      if(!userFound) return res.status(404).send({
+        message: 'User not found'
       })
-
-      return res.status(200).send({
-        message: 'Success',
-        userTweets: userTweets
+      var idUser = userFound._id
+      Tweet.find({user: idUser},(err, userTweets)=>{
+        if(err) return res.status(500).send({
+          message: "Server error, please try again",
+        });
+        if(!userTweets) return res.status(404).send({
+          message: 'Tweets not found'
+        })
+  
+        return res.status(200).send({
+          message: 'Success',
+          userTweets: userTweets
+        })
       })
     })
+    
   }else{
-    Tweet.findById(myIdAccount,{_id: 0},(err,myTweets)=>{
+    Tweet.find({user: myIdAccount},(err,myTweets)=>{
       if(err) return res.status(500).send({
         message: "Server error, please try again",
       });
@@ -86,16 +97,25 @@ function updateTweet(req,res) {
   parametr = parametr.toLowerCase();
   parametr = parametr.trim();
   parametr = parametr.split(" ");
-  var tweetId = parametr[1]
-  var myIdAccount = req.user.sub
+  parametr.shift()
+ 
+  var tweetId = parametr[0]
+  
+  
 
-  if(!myIdAccount){
-    return res.status(403).send({
-      message: 'You cannot edit tweets that are not yours'
-    })
-  }
+
   if(tweetId){
-    Tweet.findByIdAndUpdate(tweetId,{new: true}, (err,tweetEdited)=>{
+    parametr.shift()
+    var newContent = parametr.join(" ").toString()
+    var myIdAccount = req.user.sub
+    
+    Tweet.findByIdAndUpdate(tweetId,{myTweet: newContent },{new: true}, (err,tweetEdited)=>{
+      var idUser = tweetEdited.user
+      if(idUser != myIdAccount){
+        return res.status(403).send({
+          message: 'You cannot delete tweets that are not yours'
+        })
+      }
       if(err) return res.status(500).send({
         message: "Server error, please try again",
       });
@@ -122,14 +142,14 @@ function deleteTweet(req,res) {
   var tweetId = parametr[1]
   var myIdAccount = req.user.sub
 
-  if(!myIdAccount){
-    return res.status(403).send({
-      message: 'You cannot edit tweets that are not yours'
-    })
-  }
-
   if(tweetId){
     Tweet.findByIdAndDelete(tweetId, (err, tweetDeleted)=>{
+      var idUser = tweetDeleted.user
+      if(idUser != myIdAccount){
+        return res.status(403).send({
+          message: 'You cannot delete tweets that are not yours'
+        })
+      }
       if(err) return res.status(500).send({
         message: "Server error, please try again",
       });
