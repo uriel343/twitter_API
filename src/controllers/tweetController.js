@@ -100,32 +100,32 @@ function updateTweet(req,res) {
   parametr.shift()
  
   var tweetId = parametr[0]
-  
-  
-
 
   if(tweetId){
     parametr.shift()
     var newContent = parametr.join(" ").toString()
     var myIdAccount = req.user.sub
     
-    Tweet.findByIdAndUpdate(tweetId,{myTweet: newContent },{new: true}, (err,tweetEdited)=>{
-      var idUser = tweetEdited.user
-      if(idUser != myIdAccount){
-        return res.status(403).send({
-          message: 'You cannot delete tweets that are not yours'
+    Tweet.findOne({_id: tweetId},(err, tweetFound)=>{
+      if(err) return res.status(500).send({message: 'Server error, please try again'})
+      if(!tweetFound) return res.status(404).send({message: 'Tweet not found'})
+      var auth = tweetFound.user
+      if(myIdAccount != auth){
+        return res.status(403).send({message: "You don´t have permission to update tweets that aren't yours"})
+      }else{
+        Tweet.findByIdAndUpdate(tweetId,{myTweet: newContent },{new: true}, (err,tweetEdited)=>{
+          if(err) return res.status(500).send({
+            message: "Server error, please try again",
+          });
+          if(!tweetEdited) return res.status(404).send({
+            message: 'Tweet not found'
+          })
+          return res.status(200).send({
+            message: 'Success',
+            newTweet: tweetEdited
+          })
         })
       }
-      if(err) return res.status(500).send({
-        message: "Server error, please try again",
-      });
-      if(!tweetEdited) return res.status(404).send({
-        message: 'Tweet not found'
-      })
-      return res.status(200).send({
-        message: 'Success',
-        newTweet: tweetEdited
-      })
     })
   }else{
     return res.status(400).send({
@@ -143,24 +143,27 @@ function deleteTweet(req,res) {
   var myIdAccount = req.user.sub
 
   if(tweetId){
-    Tweet.findByIdAndDelete(tweetId, (err, tweetDeleted)=>{
-      var idUser = tweetDeleted.user
-      if(idUser != myIdAccount){
-        return res.status(403).send({
-          message: 'You cannot delete tweets that are not yours'
+    Tweet.findOne({_id: tweetId},(err, tweetFound)=>{
+      if(err) return res.status(500).send({message: 'Server error, please try again'})
+      if(!tweetFound) return res.status(404).send({message: 'Tweet not found'})
+      var auth = tweetFound.user
+      if(myIdAccount != auth){
+        return res.status(403).send({message: "You don't have permission to delete tweets that aren't yours"})
+      }else{
+        Tweet.findByIdAndDelete(tweetId, (err, tweetDeleted)=>{
+          if(err) return res.status(500).send({
+            message: "Server error, please try again",
+          });
+          if(!tweetDeleted) return res.status(404).send({
+            message: 'Tweet not found'
+          })
+          
+          return res.status(200).send({
+            message: 'Success',
+            tweetDeleted: tweetDeleted
+          })
         })
       }
-      if(err) return res.status(500).send({
-        message: "Server error, please try again",
-      });
-      if(!tweetDeleted) return res.status(404).send({
-        message: 'Tweet not found'
-      })
-      
-      return res.status(200).send({
-        message: 'Success',
-        tweetDeleted: tweetDeleted
-      })
     })
   }else{
     return res.status(400).send({
