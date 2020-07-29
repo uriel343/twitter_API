@@ -38,7 +38,16 @@ function generalOptions(req, res) {
         Follow.follow(req,res)
       break;
     case "unfollow":
-      Follow.unfollow(req,res)
+        Follow.unfollow(req,res)
+      break;
+    case 'like_tweet':
+        Tweet.likedTweet(req,res)
+      break;
+    case 'reply_tweet':
+        Tweet.commentTweet(req,res)
+      break;
+    case 'retweet':
+        Tweet.retweet(req,res)
       break;
     default:
         return res.status(404).send({

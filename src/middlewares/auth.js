@@ -5,8 +5,8 @@ const config = require('../confing')
 
 exports.ensureAuth = (req, res, next)=>{
   var parametr = req.body.command; 
-  parametr = parametr.toLowerCase();
-  parametr = parametr.trim();
+  //parametr = parametr.toLowerCase();
+  //parametr = parametr.trim();
   parametr = parametr.split(" ");
 
   var evaluatingCommand =
