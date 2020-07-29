@@ -7,8 +7,8 @@ en un solo comando, teniendo en cuenta la autenticación de usuarios, para que e
 **Funciona por medio de comandos en una sola ruta de peticiones**
 1. Ingresamos a nuestra terminal en donde iniciaremos nuestra comunicación http
 
-    //Comando para ejecutar el servidor
-    npm run start
+    `` //Comando para ejecutar el servidor
+       npm run start
 
 2. Utilizaremos una interfaz que nos permita interactuar con las peticiones, te recomiendo Postman o mongoCompass, para que puedas tener una experiencia agradable en las peticiones.
 
