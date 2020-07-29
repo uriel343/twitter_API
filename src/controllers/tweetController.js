@@ -62,7 +62,7 @@ function viewTweets(req, res) {
           message: "User not found",
         });
       var idUser = userFound._id;
-      Tweet.find({ user: idUser }, (err, userTweets) => {
+      Tweet.find({ user: idUser },{likes: 0, comments: 0}, (err, userTweets) => {
         if (err)
           return res.status(500).send({
             message: "Server error, please try again",
@@ -79,7 +79,7 @@ function viewTweets(req, res) {
       });
     });
   } else {
-    Tweet.find({ user: myIdAccount }, (err, myTweets) => {
+    Tweet.find({ user: myIdAccount }, {likes: 0, comments: 0}, (err, myTweets) => {
       if (err)
         return res.status(500).send({
           message: "Server error, please try again",
