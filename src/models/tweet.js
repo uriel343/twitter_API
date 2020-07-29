@@ -4,9 +4,6 @@ const Schema = mongoose.Schema;
 
 var tweetSchema = Schema({
   myTweet: String ,
-  numRetweets: Number,
-  numLikes: Number,
-  numComments: Number,
   user: {
     type: Schema.Types.ObjectId,
     ref: "user",
@@ -22,12 +19,15 @@ var tweetSchema = Schema({
     comment: String
     }
   ],
+  numRetweets: Number,
+  numLikes: Number,
+  numComments: Number,
   retweet: [
     {
       tweetId: String,
       contentOfTweet: String
     }
-  ],
+  ]
   
 });
 

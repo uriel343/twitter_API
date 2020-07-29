@@ -16,6 +16,9 @@ function createTweet(req, res) {
   if (contentOfTweet) {
     tweeting.myTweet = contentOfTweet;
     tweeting.user = myIdAccount;
+    tweeting.numRetweets = 0;
+    tweeting.numLikes = 0
+    tweeting.numComments = 0
 
     tweeting.save((err, tweetSaved) => {
       if (err)
@@ -39,7 +42,7 @@ function createTweet(req, res) {
     });
   }
 }
-
+//mostrar contadores de retweets, likes, comments
 function viewTweets(req, res) {
   var parametr = req.body.command;
   parametr = parametr.toLowerCase();
@@ -220,7 +223,7 @@ function likedTweet(req, res) {
         if (likeExist) {
           Tweet.findByIdAndUpdate(
             tweetId,
-            { $pull: { likes: { user: myIdAccount } } },
+            { $pull: { likes: { user: myIdAccount } } , $inc:{numLikes: -1}},
             { new: true },
             (err, dislike) => {
               if (err)
@@ -231,9 +234,9 @@ function likedTweet(req, res) {
             }
           );
         } else {
-          Tweet.findByIdAndUpdate(
-            tweetId,
-            { $push: { likes: { user: myIdAccount } } },
+          Tweet.findOneAndUpdate(
+            {_id: tweetId},
+            { $push: { likes: { user: myIdAccount } }, $inc: {numLikes: 1} },
             { new: true },
             (err, liked) => {
               if (err)
@@ -273,7 +276,7 @@ function commentTweet(req, res) {
 
     Tweet.findByIdAndUpdate(
       tweetId,
-      { $push: { comments: { comment: comment, user: myIdAccount } } },
+      { $push: { comments: { comment: comment, user: myIdAccount } }, $inc:{numComments: 1} },
       { new: true },
       (err, commented) => {
         if (err)
@@ -326,6 +329,7 @@ function retweet(req, res) {
             Tweet.findByIdAndUpdate(
               tweetId,
               { $inc: { numRetweets: -1 } },
+              {new: true},
               (err) => {
                 if (err)
                   return res
@@ -350,6 +354,7 @@ function retweet(req, res) {
             Tweet.findByIdAndUpdate(
               tweetId,
               { $inc: { numRetweets: 1 } },
+              {new: true},
               (err) => {
                 if(err) return res.status(500).send({message: 'Server error, please try again'})
                 retweet.user = myIdAccount;
@@ -358,6 +363,9 @@ function retweet(req, res) {
                   contentOfTweet: contentOfTweet,
                 };
                 retweet.myTweet = comment;
+                retweet.numComments = 0
+                retweet.numLikes = 0
+                retweet.numRetweets = 0
                 retweet.save((err, retweetSuccess) => {
                   if (err)
                     return res
