@@ -300,6 +300,7 @@ function retweet(req, res) {
   parametr = parametr.split(" ");
   parametr.shift();
 
+  
   var tweetId = parametr[0];
   if (tweetId) {
     parametr.shift();
@@ -317,6 +318,7 @@ function retweet(req, res) {
           .send({ message: "Tweet not found, please try again" });
       var tweetId = tweetFound._id;
       var contentOfTweet = tweetFound.myTweet;
+      var userOfTweet = tweetFound.user
       Tweet.findOne(
         {
           $and: [
@@ -361,6 +363,7 @@ function retweet(req, res) {
                 retweet.retweet = {
                   tweetId: tweetId,
                   contentOfTweet: contentOfTweet,
+                  userOfTweet: userOfTweet
                 };
                 retweet.myTweet = comment;
                 retweet.numComments = 0

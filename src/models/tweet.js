@@ -25,7 +25,8 @@ var tweetSchema = Schema({
   retweet: [
     {
       tweetId: String,
-      contentOfTweet: String
+      contentOfTweet: String,
+      userOfTweet: String
     }
   ]
   
